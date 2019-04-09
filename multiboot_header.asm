@@ -11,3 +11,4 @@ header_start:
 	dw  0				; type
 	dw 0				; flags
 	dd 8				; size
+header_end:
