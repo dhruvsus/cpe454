@@ -1,4 +1,6 @@
 nasm = nasm -f elf64
+cc = gcc
+cflags = -c -g
 loop0 = /dev/loop62
 loop1 = /dev/loop63
 all: run
@@ -25,8 +27,14 @@ os.img: image/boot/kernel.bin image/boot/grub/grub.cfg
 	echo "cpe454" | sudo -S losetup -d $(loop1)
 
 image/boot/kernel.bin:
-	nasm -f elf64 build/multiboot_header.asm
-	nasm -f elf64 build/long_mode_init.asm
-	nasm -f elf64 build/boot.asm
+	$(nasm) build/multiboot_header.asm
+	$(nasm) build/long_mode_init.asm
+	$(nasm) build/boot.asm
+	# compile kmain
+	$(cc) $(cflags) build/kmain.c
+	mv kmain.o build/	
 	ld -n -o image/boot/kernel.bin -T build/linker.ld build/multiboot_header.o \
-		build/boot.o build/long_mode_init.o
+		build/boot.o build/long_mode_init.o build/kmain.o
+clean:
+	rm build/*.o
+	rm image/boot/kernel.bin
