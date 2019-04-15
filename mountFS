@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo cpe454 | sudo -S sleep 0.1
+
+MBRDevice="$(echo cpe454 | sudo -S losetup -f)"
+sudo losetup $MBRDevice vdrive.img
+FSDevice="$(echo cpe454 | sudo -S losetup -f)"
+sudo losetup $FSDevice vdrive.img -o 1048576
+sudo mount $FSDevice /mnt/fatgrub
+
