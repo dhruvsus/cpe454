@@ -23,3 +23,10 @@ os.img: image/boot/kernel.bin image/boot/grub/grub.cfg
 	echo "cpe454" | sudo -S umount /mnt/fatgrub
 	echo "cpe454" | sudo -S losetup -d $(loop0)
 	echo "cpe454" | sudo -S losetup -d $(loop1)
+
+image/boot/kernel.bin:
+	nasm -f elf64 build/multiboot_header.asm
+	nasm -f elf64 build/long_mode_init.asm
+	nasm -f elf64 build/boot.asm
+	ld -n -o image/boot/kernel.bin -T build/linker.ld build/multiboot_header.o \
+		build/boot.o build/long_mode_init.o
