@@ -22,10 +22,12 @@ os.img: image/boot/kernel.bin image/boot/grub/grub.cfg
 		--no-floppy --modules="normal part_msdos ext2 multiboot" $(loop0)
 	echo "cpe454" | sudo -S cp -r image/* /mnt/fatgrub
 	# cleanup
+	sync
 	echo "cpe454" | sudo -S umount /mnt/fatgrub
 	echo "cpe454" | sudo -S losetup -d $(loop0)
 	echo "cpe454" | sudo -S losetup -d $(loop1)
-
+	# move img into main directory
+	mv build/os.img .
 image/boot/kernel.bin:
 	$(nasm) build/multiboot_header.asm
 	$(nasm) build/long_mode_init.asm
@@ -37,4 +39,5 @@ image/boot/kernel.bin:
 		build/boot.o build/long_mode_init.o build/kmain.o
 clean:
 	rm build/*.o
+	rm os.img
 	rm image/boot/kernel.bin
