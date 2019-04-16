@@ -26,4 +26,27 @@ the check_multiboot function compares eax against the magic number and errors ou
 checking CPUID involves flipping a bit in the FLAGS register and checking if the CPU actually flipped it. if it did, then it's a supported CPUID, else it's not.
 
 checking long mode: 
- 
+this involves getting the cpu with cpuid and 0x80000000 and checking if the CPU supports long mode.
+then we call it again with 0x80000001 in eax and check edx.
+
+Paging
+
+x86: page size of 4096 bytes and 4 level page table
+Page table, pagede directory table, page directory pointer table, page map level 4 table
+Each page contains 512 entries and each entry is 8 bytes.
+Accessing memory: 
+1.Gets 64 bit address(actually 48 bits only*) P4 table address from CR3 register
+2.Use bits 39-47 (9) to index into P4
+3. next 9 for P3
+4. next 9 for P2
+5. next 9 for P1
+6. Use last 12 bits as page offset 2^12=4096 =page size
+
+*bits 48-63 are copies of bit 47 so each virtual address is still unique.
+
+So we set up the 4 tables of 4096 bytes each. we also align 4096 to make sure that
+the page tables are page aligned.
+
+now, we link the first entry in p4 to p3_table and the first entry in p3_table to p2_table. also, set 0b11 ie the 0th and 1st bit to signify present+writable
+
+to map p2_table's first entry to 
