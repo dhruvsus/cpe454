@@ -1,1 +1,29 @@
-hello?
+Multiboot Kernel
+
+the BIOS loads the bootloader (GRUB) from the image (os.img)
+the bootloader reads the kernel executable to find the multiboot header(we want this to be unaligned and at the front of the kernel).
+it copies the contents of the .boot and .text sections to memory 0x100000 and 0x100020.
+it jumps to 0x100020 and executes the code it finds there. In this case, it's the green OK.
+
+Entering Long Mode
+
+the previous kernel was running in protected mode which allows only 32 bit instructions and upto 4GiB of memory. We need to set up Paging and switch to true 64 bit mode.
+
+error: procedure prints ERR to the screen and the given error code and halts.
+
+the VGA text buffer starts at 0xb8000 and it's an array of screen characters that are displayed by the graphics card. 
+
+A screen character consists of a 8 bit color code and a 8 bit ASCII character.
+
+A function is just a normal label with a ret(return) instruction at the end. The call instruction can be used to call it.
+
+esp: intel x86 stack pointer register 32 bits wide
+eax; general purpose
+
+according to the Multiboot specification, the bootloader must write the magic value 0x36d76289 to eax before loading a kernel.
+the check_multiboot function compares eax against the magic number and errors out if it's not equal.
+
+checking CPUID involves flipping a bit in the FLAGS register and checking if the CPU actually flipped it. if it did, then it's a supported CPUID, else it's not.
+
+checking long mode: 
+ 

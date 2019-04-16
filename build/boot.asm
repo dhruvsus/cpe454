@@ -12,7 +12,7 @@ start:
     call set_up_page_tables ; new
     call enable_paging ; new
 
-    ;load the 54-bit GDT
+    ;load the 64-bit GDT
     lgdt [gdt64.pointer]
     
     jmp gdt64.code:long_mode_start 
