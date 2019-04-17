@@ -1,5 +1,6 @@
 #include "vga.h"
 #include "mem.h"
+#include<stdint.h>
 
 static unsigned short *vgaBuff = (unsigned short *)VGA_BASE;
 static int width = 80;
@@ -9,7 +10,7 @@ static unsigned char color = (0x00 << 4) | 0x02;
 
 void VGA_clear(void)
 {
-	memset(vgaBuff, 0, width * height);
+	memset(vgaBuff, '\0', width * height);
 }
 void VGA_display_char(char c)
 {

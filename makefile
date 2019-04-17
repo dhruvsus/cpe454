@@ -1,6 +1,6 @@
 nasm = nasm -f elf64
 cc = gcc
-cflags = -Wall -c -g
+cflags = -Wall -c -g -fno-builtin
 loop0 = /dev/loop62
 loop1 = /dev/loop63
 all: run
@@ -36,7 +36,7 @@ image/boot/kernel.bin:
 	$(cc) $(cflags) build/*.c
 	mv *.o build/	
 	ld -n -o image/boot/kernel.bin -T build/linker.ld build/multiboot_header.o \
-		build/boot.o build/long_mode_init.o build/kmain.o build/vga.o
+		build/boot.o build/long_mode_init.o build/kmain.o build/vga.o build/mem.o
 clean:
 	rm build/*.o
 	rm os.img
