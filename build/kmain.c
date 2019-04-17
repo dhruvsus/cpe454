@@ -1,7 +1,7 @@
-#include "vga.h"
+#include "printk.h"
 void kmain()
-{
-	VGA_clear();
+{	
+	printk("%%");
 	while (1)
 	{
 		asm volatile("hlt");
