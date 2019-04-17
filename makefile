@@ -35,8 +35,12 @@ image/boot/kernel.bin:
 	# compile kmain
 	$(cc) $(cflags) build/*.c
 	mv *.o build/	
-	ld -n -o image/boot/kernel.bin -T build/linker.ld build/multiboot_header.o \
-		build/boot.o build/long_mode_init.o build/kmain.o build/vga.o build/mem.o build/printk.o
+	ld -n -o image/boot/kernel.bin -T build/linker.ld \
+	build/multiboot_header.o \
+		build/boot.o build/long_mode_init.o \
+		build/kmain.o build/vga.o build/mem.o \
+		build/printk.o build/keyboard.o \
+		build/asm.o
 clean:
 	rm build/*.o
 	rm os.img
