@@ -1,6 +1,6 @@
 nasm = nasm -f elf64
 cc = gcc
-cflags = -c -g
+cflags = -Wall -c -g
 loop0 = /dev/loop62
 loop1 = /dev/loop63
 all: run

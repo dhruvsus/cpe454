@@ -1,7 +1,9 @@
-extern void VGA_clear();
-void kmain(){
-	VGA_display_char('y');
-	while(1){
+#include "vga.h"
+void kmain()
+{
+	VGA_clear();
+	while (1)
+	{
 		asm volatile("hlt");
-	}	
+	}
 }
