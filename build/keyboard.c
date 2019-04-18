@@ -122,14 +122,41 @@ void initKeyboard(void)
     outb(PS2_CMD, CMD_SET_CONFIGURATION);
     sendData(config);
     //controller self test
-    outb(PS2_CMD,CONTROLLER_TEST);
-    uint8_t testResult=getData();
-    VGA_clear();
-    VGA_display_char((char)testResult);
+    outb(PS2_CMD, CONTROLLER_TEST);
+    uint8_t testResult = getData();
+    //VGA_display_char((char)testResult);
     // need printk to check if the test worked
     // enable port 1
-    outb(PS2_CMD,ENABLE_PORT_1);
-
+    outb(PS2_CMD, ENABLE_PORT_1);
+    // reset and self test the keyboard
+    sendData(RESET);
+    testResult = getData();
+    // check if testResult was ACK
+    while (testResult != ACK)
+    {
+        if (testResult == RESEND)
+        {
+            sendData(RESET);
+        }
+        testResult = getData();
+    }
+    // done testing
+    // set scan code
+    sendData(SCAN_CODE);
+    sendData(SCAN_CODE_2);
+    testResult = getData();
+    // check if testResult was ACK
+    // ie scan code was set
+    while (testResult != ACK)
+    {
+        if (testResult == RESEND)
+        {
+            sendData(SCAN_CODE);
+            sendData(SCAN_CODE_2);
+        }
+        testResult = getData();
+    }
+    
 }
 static uint8_t getData()
 {

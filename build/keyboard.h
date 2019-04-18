@@ -1,3 +1,4 @@
+#include <stdint.h>
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 #define PS2_DATA 0x60
@@ -12,7 +13,12 @@
 #define CMD_SET_CONFIGURATION 0x60
 #define PORT1_INT_CLOCK 0b1101110
 #define CONTROLLER_TEST 0xAA
-#include <stdint.h>
+// keyboard stuff
+#define ACK 0xFA
+#define RESEND 0xFE
+#define RESET 0xFF
+#define SCAN_CODE 0xF0
+#define SCAN_CODE_2 2
 void initKeyboard(void);
 static uint8_t getData();
 static void sendData(uint8_t data);

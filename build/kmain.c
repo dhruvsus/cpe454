@@ -1,8 +1,10 @@
 #include "printk.h"
 #include "keyboard.h"
+#include "vga.h"
 void kmain()
 {	
-	printk("%%");
+	VGA_clear();
+	printk("%u",-5);
 	initKeyboard();
 	while (1)
 	{
