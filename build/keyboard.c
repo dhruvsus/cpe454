@@ -1,5 +1,6 @@
 #include "keyboard.h"
 #include "asm.h"
+#include "vga.h"
 static char scancodeMap[0xFE] = {0};
 static char scancodeMapShift[0xFE] = {0};
 static void initScanCodes(void)
@@ -111,9 +112,40 @@ void initKeyboard(void)
 {
     initScanCodes();
     // disable ports
-    outb(PS2_CMD,DISABLE_PORT_1);
-    outb(PS2_CMD,DISABLE_PORT_2);
+    outb(PS2_CMD, DISABLE_PORT_1);
+    outb(PS2_CMD, DISABLE_PORT_2);
     // get current configuration
-    outb(PS2_CMD,CMD_GET_CONFIGURATION);
-    
+    outb(PS2_CMD, CMD_GET_CONFIGURATION);
+    uint8_t config = getData();
+    // write new configuration with bit 0,4 =0
+    config = config & PORT1_INT_CLOCK;
+    outb(PS2_CMD, CMD_SET_CONFIGURATION);
+    sendData(config);
+    //controller self test
+    outb(PS2_CMD,CONTROLLER_TEST);
+    uint8_t testResult=getData();
+    VGA_clear();
+    VGA_display_char((char)testResult);
+    // need printk to check if the test worked
+    // enable port 1
+    outb(PS2_CMD,ENABLE_PORT_1);
+
+}
+static uint8_t getData()
+{
+    uint8_t status = inb(PS2_STATUS);
+    while (!(status & PS2_STATUS_OUTPUT))
+    {
+        status = inb(PS2_STATUS);
+    }
+    return inb(PS2_DATA);
+}
+static void sendData(uint8_t data)
+{
+    uint8_t status = inb(PS2_STATUS);
+    while (status & PS2_STATUS_INPUT)
+    {
+        status = inb(PS2_STATUS);
+    }
+    outb(PS2_DATA, data);
 }
