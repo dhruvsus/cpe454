@@ -7,7 +7,7 @@ void kmain()
 	int i=0;
 	//while(i==0);
 	VGA_clear();
-	printk("%%");
+	printk("%s","hello my dear boy\n");
 	initKeyboard();
 	while (1)
 	{

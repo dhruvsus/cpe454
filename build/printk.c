@@ -16,6 +16,11 @@ int printk(const char *fmt, ...)
             case '%':
                 VGA_display_char('%');
                 break;
+            case 'c':
+                VGA_display_char((char)va_arg(args,int));
+                break;
+            case 's':
+                VGA_display_str(va_arg(args, const char*));
             case 'd':
                 break;
             }
