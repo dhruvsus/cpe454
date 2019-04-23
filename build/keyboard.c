@@ -156,7 +156,6 @@ void initKeyboard(void)
         }
         testResult = getData();
     }
-    
 }
 static uint8_t getData()
 {

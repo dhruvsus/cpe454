@@ -3,8 +3,11 @@
 #include "vga.h"
 void kmain()
 {	
+	char str[100]={'\0'};
+	int i=0;
+	//while(i==0);
 	VGA_clear();
-	printk("%u",-5);
+	printk("%%");
 	initKeyboard();
 	while (1)
 	{
