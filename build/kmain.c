@@ -4,12 +4,16 @@
 void kmain()
 {
 	char c;
+	int i=0;
 	VGA_clear();
 	initKeyboard();
 	while (1)
 	{
-		c=pollKeyboard();
-		printk("character from keyboard %c",c);
+		c = pollKeyboard();
+		if (c != 0)
+		{
+			printk("character from keyboard %c\n", c);
+		}
 	}
 	while (1)
 	{

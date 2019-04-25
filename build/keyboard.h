@@ -20,6 +20,7 @@
 #define RESET 0xFF
 #define SCAN_CODE 0xF0
 #define SCAN_CODE_2 2
+#define ECHO 0xEE
 void initKeyboard(void);
 static uint8_t getData();
 static void sendData(uint8_t data);

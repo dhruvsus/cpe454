@@ -1,6 +1,7 @@
 #include "keyboard.h"
 #include "asm.h"
 #include "vga.h"
+#include "printk.h"
 char scancodeMap[0xFE] = {0};
 static void initScanCodes(void)
 {
@@ -122,8 +123,7 @@ void initKeyboard(void)
     //controller self test
     outb(PS2_CMD, CONTROLLER_TEST);
     uint8_t testResult = getData();
-    //VGA_display_char((char)testResult);
-    // need printk to check if the test worked
+    //printk("Controller self test result: %d\n", testResult);
     // enable port 1
     outb(PS2_CMD, ENABLE_PORT_1);
     // reset and self test the keyboard
@@ -138,7 +138,8 @@ void initKeyboard(void)
         }
         testResult = getData();
     }
-    // done testing
+    //printk("Keyboard self test result %d\n", testResult);
+    /* // done testing
     // set scan code
     sendData(SCAN_CODE);
     sendData(SCAN_CODE_2);
@@ -154,6 +155,34 @@ void initKeyboard(void)
         }
         testResult = getData();
     }
+    printk("Scan code set result %d\n", testResult);
+    // check scan code set
+    sendData(SCAN_CODE);
+    sendData(0);
+    testResult=getData();
+    while (testResult != ACK)
+    {
+        if (testResult == RESEND)
+        {
+            sendData(SCAN_CODE);
+            sendData(0);
+        }
+        testResult = getData();
+    }
+    printk("Scan code set %d\n", getData());
+     */// echo check
+    sendData(ECHO);
+    testResult = getData();
+    // check if testResult was ECHO
+    while (testResult != ECHO)
+    {
+        if (testResult == RESEND)
+        {
+            sendData(ECHO);
+        }
+        testResult = getData();
+    }
+    //printk("Echo recieved %d\n", testResult);
 }
 char pollKeyboard()
 {

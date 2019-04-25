@@ -38,11 +38,10 @@ int printk(const char *fmt, ...)
                 VGA_display_str(itoa(va_arg(args, long long int), str, 16));
             }
         }
-        else
-        {
+        else{
             VGA_display_char(*fmt);
-            fmt++;
         }
+        fmt++;
     }
 }
 void reverse(char *str, int length)

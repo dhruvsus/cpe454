@@ -18,7 +18,7 @@ static int line(int cursor)
 static void scroll()
 {
 	static uint16_t *vgaBuffTemp[VGA_WIDTH * VGA_HEIGHT] = {0};
-	int vga_size = VGA_WIDTH * VGA_HEIGHT;
+	int vga_size = VGA_WIDTH * VGA_HEIGHT*sizeof(uint16_t);
 	memcpy(vgaBuffTemp, vgaBuff, vga_size);
 	memcpy(vgaBuff, vgaBuffTemp + VGA_WIDTH, vga_size - VGA_WIDTH * sizeof(uint16_t));
 	memset(vgaBuff + vga_size - VGA_WIDTH, '\0', VGA_WIDTH * sizeof(uint16_t));
