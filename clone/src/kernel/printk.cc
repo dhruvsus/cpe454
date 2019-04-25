@@ -115,7 +115,26 @@ int printk(const char* format, ...) {
           // 0x11223344aabbccdd
           PRINT_STRING("0x");
           PRINT_NUMBER(long long unsigned, 16, UPPER_CASE);
-          
+          int hex = 0xABCD1234;
+  printk("%%X 0xABCD1234: %X\n", hex);
+  printk("%%x 0xabcd1234: %x\n", hex);
+
+  printk("%%d -1234: %d\n", -1234);
+  printk("%%u -1234: %u\n", (unsigned) -1234);
+
+  //printk("\"asdf\": %s\nint -1234: %d\nunsigned 1234: %u\n", "asdf", -1234, (unsigned) 1234);
+  printk("%%s \"asdf\": %s\n", "asdf");
+
+  long unsigned long_unsigned = 0x11223344;
+  long long unsigned long_long_unsigned = 0x1122334455667788;
+  printk("%%lx: %lx\n%%llx: %llx\n", long_unsigned, long_long_unsigned);
+  printk("%%qu: %qu\n", long_long_unsigned);
+
+  printk("%%p: %p\n", &long_unsigned);
+
+  printk("%%hd 1243: %hd\n", 1234);
+  printk("%%hhd 'c': %hhd\n", 'c');
+
           break;
 
         case 'h': // %h[h][dux]

@@ -1,8 +1,7 @@
 #include "keyboard.h"
 #include "asm.h"
 #include "vga.h"
-static char scancodeMap[0xFE] = {0};
-static char scancodeMapShift[0xFE] = {0};
+char scancodeMap[0xFE] = {0};
 static void initScanCodes(void)
 {
     scancodeMap[0x0D] = '\t';
@@ -55,57 +54,56 @@ static void initScanCodes(void)
     scancodeMap[0x5A] = '\n';
     scancodeMap[0x5B] = ']';
     scancodeMap[0x5D] = '\\';
-
-    scancodeMapShift[0x0D] = '\t';
-    scancodeMapShift[0x0E] = '~';
-    scancodeMapShift[0x15] = 'Q';
-    scancodeMapShift[0x16] = '!';
-    scancodeMapShift[0x1A] = 'Z';
-    scancodeMapShift[0x1B] = 'S';
-    scancodeMapShift[0x1C] = 'A';
-    scancodeMapShift[0x1D] = 'W';
-    scancodeMapShift[0x1E] = '@';
-    scancodeMapShift[0x21] = 'C';
-    scancodeMapShift[0x22] = 'X';
-    scancodeMapShift[0x23] = 'D';
-    scancodeMapShift[0x24] = 'E';
-    scancodeMapShift[0x25] = '$';
-    scancodeMapShift[0x26] = '#';
-    scancodeMapShift[0x29] = ' ';
-    scancodeMapShift[0x2A] = 'V';
-    scancodeMapShift[0x2B] = 'F';
-    scancodeMapShift[0x2C] = 'T';
-    scancodeMapShift[0x2D] = 'R';
-    scancodeMapShift[0x2E] = '%';
-    scancodeMapShift[0x31] = 'N';
-    scancodeMapShift[0x32] = 'B';
-    scancodeMapShift[0x33] = 'H';
-    scancodeMapShift[0x34] = 'G';
-    scancodeMapShift[0x35] = 'Y';
-    scancodeMapShift[0x36] = '^';
-    scancodeMapShift[0x3A] = 'M';
-    scancodeMapShift[0x3B] = 'J';
-    scancodeMapShift[0x3C] = 'U';
-    scancodeMapShift[0x3D] = '&';
-    scancodeMapShift[0x3E] = '*';
-    scancodeMapShift[0x41] = '<';
-    scancodeMapShift[0x42] = 'K';
-    scancodeMapShift[0x43] = 'I';
-    scancodeMapShift[0x44] = 'O';
-    scancodeMapShift[0x45] = ')';
-    scancodeMapShift[0x46] = '(';
-    scancodeMapShift[0x49] = '>';
-    scancodeMapShift[0x4A] = '?';
-    scancodeMapShift[0x4B] = 'L';
-    scancodeMapShift[0x4C] = ':';
-    scancodeMapShift[0x4D] = 'P';
-    scancodeMapShift[0x4E] = '_';
-    scancodeMapShift[0x52] = '"';
-    scancodeMapShift[0x54] = '{';
-    scancodeMapShift[0x55] = '+';
-    scancodeMapShift[0x5A] = '\n';
-    scancodeMapShift[0x5B] = '}';
-    scancodeMapShift[0x5D] = '|';
+    scancodeMap[0x0D] = '\t';
+    scancodeMap[0x0E] = '~';
+    scancodeMap[0x15] = 'Q';
+    scancodeMap[0x16] = '!';
+    scancodeMap[0x1A] = 'Z';
+    scancodeMap[0x1B] = 'S';
+    scancodeMap[0x1C] = 'A';
+    scancodeMap[0x1D] = 'W';
+    scancodeMap[0x1E] = '@';
+    scancodeMap[0x21] = 'C';
+    scancodeMap[0x22] = 'X';
+    scancodeMap[0x23] = 'D';
+    scancodeMap[0x24] = 'E';
+    scancodeMap[0x25] = '$';
+    scancodeMap[0x26] = '#';
+    scancodeMap[0x29] = ' ';
+    scancodeMap[0x2A] = 'V';
+    scancodeMap[0x2B] = 'F';
+    scancodeMap[0x2C] = 'T';
+    scancodeMap[0x2D] = 'R';
+    scancodeMap[0x2E] = '%';
+    scancodeMap[0x31] = 'N';
+    scancodeMap[0x32] = 'B';
+    scancodeMap[0x33] = 'H';
+    scancodeMap[0x34] = 'G';
+    scancodeMap[0x35] = 'Y';
+    scancodeMap[0x36] = '^';
+    scancodeMap[0x3A] = 'M';
+    scancodeMap[0x3B] = 'J';
+    scancodeMap[0x3C] = 'U';
+    scancodeMap[0x3D] = '&';
+    scancodeMap[0x3E] = '*';
+    scancodeMap[0x41] = '<';
+    scancodeMap[0x42] = 'K';
+    scancodeMap[0x43] = 'I';
+    scancodeMap[0x44] = 'O';
+    scancodeMap[0x45] = ')';
+    scancodeMap[0x46] = '(';
+    scancodeMap[0x49] = '>';
+    scancodeMap[0x4A] = '?';
+    scancodeMap[0x4B] = 'L';
+    scancodeMap[0x4C] = ':';
+    scancodeMap[0x4D] = 'P';
+    scancodeMap[0x4E] = '_';
+    scancodeMap[0x52] = '"';
+    scancodeMap[0x54] = '{';
+    scancodeMap[0x55] = '+';
+    scancodeMap[0x5A] = '\n';
+    scancodeMap[0x5B] = '}';
+    scancodeMap[0x5D] = '|';
 }
 
 void initKeyboard(void)
@@ -156,6 +154,19 @@ void initKeyboard(void)
         }
         testResult = getData();
     }
+}
+char pollKeyboard()
+{
+    // poll to check bit 0 of status register
+    uint8_t status = inb(PS2_STATUS);
+    while (!status & PS2_STATUS_OUTPUT)
+    {
+        status = inb(PS2_STATUS);
+    }
+    // bit 0 is now set
+    uint8_t scanCode = inb(PS2_DATA);
+    // get the character key pressed
+    return scancodeMap[scanCode];
 }
 static uint8_t getData()
 {

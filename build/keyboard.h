@@ -6,6 +6,7 @@
 #define PS2_STATUS PS2_CMD
 #define PS2_STATUS_OUTPUT 1
 #define PS2_STATUS_INPUT (1 << 1)
+#define PS2_STATUS_OUTPUT 1
 #define ENABLE_PORT_1 0xAE
 #define DISABLE_PORT_1 0xAD
 #define DISABLE_PORT_2 0xA7
@@ -23,4 +24,5 @@ void initKeyboard(void);
 static uint8_t getData();
 static void sendData(uint8_t data);
 static void initScanCodes(void);
+char pollKeyboard();
 #endif
