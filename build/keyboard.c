@@ -2,6 +2,7 @@
 #include "asm.h"
 #include "vga.h"
 #include "printk.h"
+
 char scancodeMap[0xFE] = {0};
 static void initScanCodes(void)
 {
@@ -109,21 +110,36 @@ static void initScanCodes(void)
 
 void initKeyboard(void)
 {
+    uint8_t status;
     initScanCodes();
     // disable ports
     outb(PS2_CMD, DISABLE_PORT_1);
     outb(PS2_CMD, DISABLE_PORT_2);
+    // flush the output buffer
+    status = inb(PS2_STATUS);
+    while (status & PS2_STATUS_OUTPUT)
+    {
+        status = inb(PS2_STATUS);
+    }
+
     // get current configuration
     outb(PS2_CMD, CMD_GET_CONFIGURATION);
     uint8_t config = getData();
-    // write new configuration with bit 0,4 =0
-    config = config & PORT1_INT_CLOCK;
+    // write new configuration with bit 0, 1, 6, 4 = 0
+    config = config & SET_CONFIG;
+    config = config | 0b00100000;
+    // this disables interrupts on both ports, disables translation on port 1
+    // and enables the clock for the first PS/2 port and disables clock for port 2
     outb(PS2_CMD, CMD_SET_CONFIGURATION);
     sendData(config);
     //controller self test
     outb(PS2_CMD, CONTROLLER_TEST);
     uint8_t testResult = getData();
-    //printk("Controller self test result: %d\n", testResult);
+    if (testResult != 0x55)
+    {
+        printk("controller test failed with result %x", testResult);
+    }
+
     // enable port 1
     outb(PS2_CMD, ENABLE_PORT_1);
     // reset and self test the keyboard
@@ -138,8 +154,7 @@ void initKeyboard(void)
         }
         testResult = getData();
     }
-    //printk("Keyboard self test result %d\n", testResult);
-    /* // done testing
+
     // set scan code
     sendData(SCAN_CODE);
     sendData(SCAN_CODE_2);
@@ -155,11 +170,11 @@ void initKeyboard(void)
         }
         testResult = getData();
     }
-    printk("Scan code set result %d\n", testResult);
+    //printk("Scan code set result %x\n", testResult);
     // check scan code set
     sendData(SCAN_CODE);
     sendData(0);
-    testResult=getData();
+    testResult = getData();
     while (testResult != ACK)
     {
         if (testResult == RESEND)
@@ -169,8 +184,8 @@ void initKeyboard(void)
         }
         testResult = getData();
     }
-    printk("Scan code set %d\n", getData());
-     */// echo check
+    //printk("Scan code set %x\n", getData());
+    // echo check
     sendData(ECHO);
     testResult = getData();
     // check if testResult was ECHO
@@ -182,7 +197,6 @@ void initKeyboard(void)
         }
         testResult = getData();
     }
-    //printk("Echo recieved %d\n", testResult);
 }
 char pollKeyboard()
 {
@@ -194,6 +208,16 @@ char pollKeyboard()
     }
     // bit 0 is now set
     uint8_t scanCode = inb(PS2_DATA);
+    // returning character only on release
+    if (scanCode == 0xF0)
+    {
+        status = inb(PS2_STATUS);
+        while (!status & PS2_STATUS_OUTPUT)
+        {
+            status = inb(PS2_STATUS);
+        }
+        scanCode = inb(PS2_DATA);
+    }
     // get the character key pressed
     return scancodeMap[scanCode];
 }

@@ -12,7 +12,7 @@
 #define DISABLE_PORT_2 0xA7
 #define CMD_GET_CONFIGURATION 0x20
 #define CMD_SET_CONFIGURATION 0x60
-#define PORT1_INT_CLOCK 0b1101110
+#define SET_CONFIG 0b10101100 // disables bit 0, 1, 4, 6
 #define CONTROLLER_TEST 0xAA
 // keyboard stuff
 #define ACK 0xFA

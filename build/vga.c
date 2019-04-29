@@ -2,20 +2,20 @@
 #include "mem.h"
 #include <stdint.h>
 
-static uint16_t *vgaBuff = (unsigned short *)VGA_BASE;
-static int cursor = 0;
-static uint16_t color = (0x00 << 4) | 0x02;
+uint16_t *vgaBuff = (unsigned short *)VGA_BASE;
+int cursor = 0;
+uint16_t color = (0x00 << 4) | 0x02;
 
 void VGA_clear(void)
 {
 	memset(vgaBuff, '\0', VGA_WIDTH * VGA_HEIGHT);
 }
 // returns location of beginning of line that cursor is on
-static int line(int cursor)
+int line(int cursor)
 {
 	return cursor - (cursor % VGA_WIDTH);
 }
-static void scroll()
+void scroll()
 {
 	static uint16_t *vgaBuffTemp[VGA_WIDTH * VGA_HEIGHT] = {0};
 	int vga_size = VGA_WIDTH * VGA_HEIGHT*sizeof(uint16_t);

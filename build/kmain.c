@@ -3,17 +3,13 @@
 #include "vga.h"
 void kmain()
 {
-	char c;
-	int i=0;
+	char c='\0';
+	int i = 0;
 	VGA_clear();
 	initKeyboard();
-	while (1)
-	{
-		c = pollKeyboard();
-		if (c != 0)
-		{
-			printk("character from keyboard %c\n", c);
-		}
+	while(c!='\0'){
+		c=pollKeyboard();
+		VGA_display_char(c);
 	}
 	while (1)
 	{

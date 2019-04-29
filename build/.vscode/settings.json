@@ -2,6 +2,7 @@
     "files.associations": {
         "printk.h": "c",
         "stdarg.h": "c",
-        "keyboard.h": "c"
+        "keyboard.h": "c",
+        "vga.h": "c"
     }
 }
